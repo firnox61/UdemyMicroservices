@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{9CCC1D06-B5AB-4762-85B6-2A4B3559D34F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{6988C6E1-4257-4273-B893-724B0CF154F2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeCourse.Services.Catalog", "Services\Catalog\FreeCourse.Services.Catalog\FreeCourse.Services.Catalog.csproj", "{987F12CE-5FF5-4264-94D9-9F01413C0EA4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Çözüm Öğeleri", "Çözüm Öğeleri", "{309B338C-C6F3-4B94-81F2-674C450B6574}"
+	ProjectSection(SolutionItems) = preProject
+		Ports.txt = Ports.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{651BD3AA-3B84-4900-B9A8-BF032BF5B688}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FreeCourse.Shared", "Shared\FreeCourse.Shared\FreeCourse.Shared.csproj", "{DE0B585A-CA3E-4E20-AE80-2B0D71AF6578}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{987F12CE-5FF5-4264-94D9-9F01413C0EA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{987F12CE-5FF5-4264-94D9-9F01413C0EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{987F12CE-5FF5-4264-94D9-9F01413C0EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{987F12CE-5FF5-4264-94D9-9F01413C0EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE0B585A-CA3E-4E20-AE80-2B0D71AF6578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE0B585A-CA3E-4E20-AE80-2B0D71AF6578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE0B585A-CA3E-4E20-AE80-2B0D71AF6578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE0B585A-CA3E-4E20-AE80-2B0D71AF6578}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6988C6E1-4257-4273-B893-724B0CF154F2} = {9CCC1D06-B5AB-4762-85B6-2A4B3559D34F}
+		{987F12CE-5FF5-4264-94D9-9F01413C0EA4} = {6988C6E1-4257-4273-B893-724B0CF154F2}
+		{DE0B585A-CA3E-4E20-AE80-2B0D71AF6578} = {651BD3AA-3B84-4900-B9A8-BF032BF5B688}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FEEE46CC-1908-468A-A3B0-3D15C8648BD2}
+	EndGlobalSection
+EndGlobal
