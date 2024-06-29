@@ -62,6 +62,7 @@ namespace FreeCourse.Services.Catalog.Services
                 foreach (var course in courses)
                 {
                     course.Category = await _categoryCollection.Find<Category>(x => x.Id == course.CategoryId).FirstAsync();
+                    //belirli bir koşulu sağlayan ilk elemanı asenkron olarak döndürür. 
                 }
             }
             else 
@@ -86,7 +87,7 @@ namespace FreeCourse.Services.Catalog.Services
         public async Task<Response<List<CourseDto>>> GetAllByUserIdAsync(string userId)
         {
             var courses=await _courseCollection.Find<Course>(c=>c.UserId==userId).ToListAsync();
-            if (courses.Any())
+            if (courses.Any())//Any() metodu, bir koleksiyonda herhangi bir eleman olup olmadığını
             {
                 foreach (var course in courses)
                 {
