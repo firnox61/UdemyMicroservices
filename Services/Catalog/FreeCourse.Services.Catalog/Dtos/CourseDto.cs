@@ -4,10 +4,10 @@ using MongoDB.Bson;
 
 namespace FreeCourse.Services.Catalog.Dtos
 {
-    internal class CourseDto
+    public class CourseDto
     {
 
-        public string Id { get; set; }
+        public string? Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
 

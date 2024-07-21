@@ -3,7 +3,7 @@ using MongoDB.Bson;
 
 namespace FreeCourse.Services.Catalog.Models
 {
-    internal class Course
+    public class Course
     {
         [BsonId]//ıd olaark mongodb de tanımlansın diye
         [BsonRepresentation(BsonType.ObjectId)]//tipi

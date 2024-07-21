@@ -1,3 +1,6 @@
  Services
 	-catalog=> http://localhost:5011
+	-photostockapi=> 5012
+identityserver=> 5001
+
 

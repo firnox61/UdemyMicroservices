@@ -2,12 +2,12 @@
 using FreeCourse.Services.Catalog.Dtos;
 using FreeCourse.Services.Catalog.Models;
 using FreeCourse.Services.Catalog.Settings;
-using FreeCourse.Shared.Dtos;
+using FreeCourses.Shared.Dtos;
 using MongoDB.Driver;
 
 namespace FreeCourse.Services.Catalog.Services
 {
-    internal class CategoryService:ICategoryService
+    public class CategoryService:ICategoryService
     {
         private readonly IMongoCollection<Category> _categoryCollection;
         private readonly IMapper _mapper;
@@ -28,8 +28,9 @@ namespace FreeCourse.Services.Catalog.Services
             return Response<List<CategoryDto>>.Success(_mapper.Map<List<CategoryDto>>(categories), 200);
         }
 
-        public async Task<Response<CategoryDto>> CreateAsync(Category category)
+        public async Task<Response<CategoryDto>> CreateAsync(CategoryDto categoryDto)
         {
+            var category= _mapper.Map<Category>(categoryDto);
             await _categoryCollection.InsertOneAsync(category);
             //Bu metot, bir belgeyi asenkron olarak MongoDB koleksiyonuna eklemek için kullanılır.
             //MongoDB.Driver kütüphanesinde bulunur.

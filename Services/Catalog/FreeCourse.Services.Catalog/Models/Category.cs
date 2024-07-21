@@ -4,7 +4,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace FreeCourse.Services.Catalog.Models
 {
-    internal class Category
+    public class Category
     {
        // IOptions<DatabaseSett>
         [BsonId]//ıd olaark mongodb de tanımlansın diye
