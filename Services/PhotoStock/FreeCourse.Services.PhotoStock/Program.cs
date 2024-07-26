@@ -13,7 +13,7 @@ builder.Services.AddControllers(opt =>
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
     options.Authority = builder.Configuration["IdentityServerURL"];//buradan key doðrulamasý yapacak ve istediði datayý dönecek
-    options.Audience = "photo_stock_catalog";
+    options.Audience = "resource_photo_stock";
     options.RequireHttpsMetadata = false;
 });
 

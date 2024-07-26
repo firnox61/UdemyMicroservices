@@ -1,0 +1,6 @@
+@FreeCourse.Services.Basket_HostAddress = http://localhost:5033
+
+GET {{FreeCourse.Services.Basket_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
