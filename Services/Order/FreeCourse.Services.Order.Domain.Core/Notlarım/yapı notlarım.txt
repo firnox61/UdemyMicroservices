@@ -1,0 +1,5 @@
+﻿Entity=>			kendisine ait bir unique değeri olan yapılar Id gibi
+
+VAlue Object=>		kendisine ait bir unique yapısı olmayan yapılar
+
+Aggraggate Root=>	Biribiriyle alakalı entityleri bir arada bulunması

@@ -1,9 +1,10 @@
  Services
-	-catalog=> http://localhost:5011,
-	-photostockapi=> 5012,
-	-basketapi=>"http://localhost:5013",
-	-discountapi=>5014,
+	-catalog=>			5011,
+	-photostockapi=>	5012,
+	-basketapi=>		5013,
+	-discountapi=>		5014,
+	-orderapi=>			5015
 
-identityserver=> 5001
+identityserver=>		5001
 
 
