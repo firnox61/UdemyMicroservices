@@ -19,6 +19,8 @@ namespace FreeCourse.IdentityServer
             new ApiResource("resource_basket"){Scopes={"basket_fullpermission"}},
             new ApiResource("resource_discount"){Scopes={"discount_fullpermission"}},
             new ApiResource("resource_order"){Scopes={"order_fullpermission"}},
+            new ApiResource("resource_payment"){Scopes={"payment_fullpermission"}},
+            new ApiResource("resource_gateway"){Scopes={"gateway_fullpermission"}},
             new ApiResource(IdentityServerConstants.LocalApi.ScopeName)
 
         };
@@ -37,9 +39,11 @@ namespace FreeCourse.IdentityServer
                new ApiScope("catalog_fullpermission","Catalog API için full erişim"),
                new ApiScope("photo_stock_fullpermission","Photo Stock API için full erişim"),
                new ApiScope(IdentityServerConstants.LocalApi.ScopeName),
-                new ApiScope("basket_fullpermission","Basket Apı için full erişim"),
-                new ApiScope("discount_fullpermission","discount Apı için full erişim"),
-                 new ApiScope("order_fullpermission","Order Apı için full erişim"),
+               new ApiScope("basket_fullpermission","Basket Apı için full erişim"),
+               new ApiScope("discount_fullpermission","discount Apı için full erişim"),
+               new ApiScope("order_fullpermission","Order Apı için full erişim"),
+               new ApiScope("payment_fullpermission","Payment Apı için full erişim"),
+               new ApiScope("gateway_fullpermission","Payment Apı için full erişim"),
 
 
 
@@ -55,7 +59,7 @@ namespace FreeCourse.IdentityServer
                     ClientId="WebMvcClient",
                     ClientSecrets={new Secret("secret".Sha256()) },
                     AllowedGrantTypes=GrantTypes.ClientCredentials,
-                    AllowedScopes={ "catalog_fullpermission", "photo_stock_fullpermission",IdentityServerConstants.LocalApi.ScopeName }
+                    AllowedScopes={ "catalog_fullpermission", "photo_stock_fullpermission", "gateway_fullpermission", IdentityServerConstants.LocalApi.ScopeName }
                 },
                 new Client
                 {
@@ -64,7 +68,8 @@ namespace FreeCourse.IdentityServer
                     AllowOfflineAccess=true,
                     ClientSecrets={new Secret("secret".Sha256()) },
                     AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
-                    AllowedScopes={ "basket_fullpermission","discount_fullpermission","order_fullpermission",IdentityServerConstants.StandardScopes.Email,
+                    AllowedScopes={ "basket_fullpermission","discount_fullpermission","order_fullpermission","payment_fullpermission","gateway_fullpermission",
+                    IdentityServerConstants.StandardScopes.Email,
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.OfflineAccess,IdentityServerConstants.LocalApi.ScopeName,"roles"//refresh token için tekrar giriş vb.

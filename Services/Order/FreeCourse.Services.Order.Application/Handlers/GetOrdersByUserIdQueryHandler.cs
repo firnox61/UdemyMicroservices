@@ -23,7 +23,7 @@ namespace FreeCourse.Services.Order.Application.Handlers
         }
 
         public async Task<Response<List<OrderDto>>> Handle(GetOrdersByUserIdQuery request, CancellationToken cancellationToken)
-        {
+        {//BuyerId değeri request.UserId ile eşleşen siparişler ve bu siparişlerin öğeleri (OrderItems) veritabanından asenkron olarak alınır.
             var orders= await _context.Orders.Include(x=>x.OrderItems).Where(x=>x.BuyerId==request.UserId).ToListAsync();
             if (!orders.Any())
             {

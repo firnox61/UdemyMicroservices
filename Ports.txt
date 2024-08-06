@@ -3,8 +3,25 @@
 	-photostockapi=>	5012,
 	-basketapi=>		5013,
 	-discountapi=>		5014,
-	-orderapi=>			5015
+	-orderapi=>			5015,
+	FakePayment=>		5016
 
 identityserver=>		5001
 
+Gateway=>				5000
 
+
+/* "BaseUrl": "http://localhost:5000"/services/catalog/courses/savecourse
+  => "BaseUrl": "http://localhost:5011/api/courses/savecourse"
+  /courses/savecourse bizim everything haline geliyor
+
+
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}*/
