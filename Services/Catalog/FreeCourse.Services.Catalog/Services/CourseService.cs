@@ -33,7 +33,7 @@ namespace FreeCourse.Services.Catalog.Services
         public async Task<Response<NoContent>> UpdateAsync(CourseUpdateDto courseUpdateDto)
         {
             var updateCourse=_mapper.Map<Course>(courseUpdateDto);
-            var result= await _courseCollection.FindOneAndReplaceAsync(x=>x.Id==courseUpdateDto.Id,updateCourse);
+            var result= await _courseCollection.FindOneAndReplaceAsync(x=>x.Id==courseUpdateDto.Id, updateCourse);
             if (result == null)
             {
                 return Response<NoContent>.Fail("Course not found", 404);

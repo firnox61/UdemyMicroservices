@@ -44,10 +44,6 @@ namespace FreeCourse.IdentityServer
                new ApiScope("order_fullpermission","Order Apı için full erişim"),
                new ApiScope("payment_fullpermission","Payment Apı için full erişim"),
                new ApiScope("gateway_fullpermission","Payment Apı için full erişim"),
-
-
-
-
             };
 
         public static IEnumerable<Client> Clients =>

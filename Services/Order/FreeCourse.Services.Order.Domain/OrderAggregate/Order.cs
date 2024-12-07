@@ -21,7 +21,7 @@ namespace FreeCourse.Services.Order.Domain.OrderAggregate
         public string BuyerId { get; private set; }
         //_orderItems: Siparişe ait ürünleri içeren özel bir liste (bu liste dışarıdan doğrudan erişilemez).
         private readonly List<OrderItem> _orderItems;
-        //iparişe ait ürünleri içeren, sadece okunabilir bir koleksiyon. _orderItems listesinin dışarıya açılmış hali.
+        //siparişe ait ürünleri içeren, sadece okunabilir bir koleksiyon. _orderItems listesinin dışarıya açılmış hali.
         public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
 
 

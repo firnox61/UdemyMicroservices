@@ -9,6 +9,7 @@
 identityserver=>		5001
 
 Gateway=>				5000
+Web=>					5010
 
 
 /* "BaseUrl": "http://localhost:5000"/services/catalog/courses/savecourse
