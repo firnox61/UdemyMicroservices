@@ -22,7 +22,12 @@ namespace FreeCourse.Services.Order.Application.Handlers
         }
 
         public async Task<Response<CreatedOrderDto>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
-        {
+        {//burda önce newadres degerine request işlemindeki adress değerlerini atadık sonra
+         //neworder a requestdeki buyer ıd ve eklenen newadres eklendi sonra
+         //requestdeki orderıtems leri neworderdaki itemlere foreach ile ekliyoruz
+         //async olarak ekleme metodumuzu çağırıyoruz
+         //_contexe değişiklikleri kaydediyoruz
+         //dünüş olarak success dondürüp createdOrdetDto nesnesini döndürüp orderID sini neworderId yapıyoruz
             var newAddress = new Address(request.Address.Province, request.Address.District, request.Address.Street,
                 request.Address.ZipCode, request.Address.Line);
             Domain.OrderAggregate.Order newOrder= new Domain.OrderAggregate.Order(request.BuyerId, newAddress);
