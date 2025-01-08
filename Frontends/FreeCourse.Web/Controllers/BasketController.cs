@@ -43,6 +43,10 @@ namespace FreeCourse.Web.Controllers
         }
         public async Task<IActionResult> ApplyDiscount(DiscountApplyInput discountApplyInput)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["discountError"] = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage).First();
+            }
             var discountStatus = await _basketService.ApplyDiscount(discountApplyInput.Code);
             //uygulandıktan sonra index sayfasına gitsin diye Temp data kullandık requelre arasında data taşıyabilmek için de
             TempData["discountStatus"]=discountStatus;
