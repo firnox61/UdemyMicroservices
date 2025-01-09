@@ -7,7 +7,7 @@
         public string CourseName { get; set; }
         public decimal Price { get; set; }
         //inidirimi de eklememeiz gerekiyor
-        private decimal? DiscountAppliedPrice { get; set; }
+        private decimal? DiscountAppliedPrice; 
         public decimal GetCurrentPrice 
         {
             get => DiscountAppliedPrice != null ? DiscountAppliedPrice.Value : Price;
