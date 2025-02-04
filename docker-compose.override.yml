@@ -1,0 +1,169 @@
+services:
+  catalogdb:
+    container_name: catalogdb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - catalogdb_volume:/data/db
+    
+  basketdb:
+    container_name: basketdb
+    restart: always
+    ports:
+      - "6379:6379" 
+  discount:
+    container_name: discountdb
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - discountdb_volume:/var/lib/postgresql/data
+    environment: 
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=Password123*
+      - POSTGRES_DB=discountdb     
+  identitydb:
+    container_name: identitydb
+    restart: always
+    ports:
+      - "1433:1433"
+    user: root
+    volumes:
+      - identitydb_volume:/var/opt/mssql
+    environment: 
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password123*
+  orderdb:
+    container_name: orderdb
+    restart: always
+    ports:
+      - "1444:1433"
+    user: root
+    volumes:
+      - orderdb_volume:/var/opt/mssql
+    environment: 
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password123*
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  catalog.api:
+    container_name: catalog.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMQUrl=rabbitmq
+      - IdentityServerURL=http://identityserver.api
+      - DatabaseSettings:ConnectionString=mongodb://catalogdb:27017
+    ports:
+      - "5011:80"
+    depends_on:
+      - rabbitmq  
+      - catalogdb
+       
+  basket.api:
+    container_name: basket.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityServerURL=http://identityserver.api
+      - RedisSettings:Port=6379
+      - RedisSettings:Host=basketdb
+      - RabbitMQUrl=rabbitmq
+    ports:
+      - "5013:80"
+    depends_on:
+      - rabbitmq
+      - basketdb
+
+  photostock.api:
+    container_name: photostock.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityServerURL=http://identityserver.api
+    ports:
+      - "5012:80"
+    volumes:
+      - C:\Users\İSMAİL ENES EROĞLU\Desktop\photos:/app/wwwroot/photos
+  discount.api:
+    container_name: discount.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityServerURL=http://identityserver.api
+      - ConnectionStrings:PostgreSql=User ID=admin; Password=Password123*; Server=discountdb;
+        Port=5432; Database=discountdb;Pooling=true
+    ports:
+      - "5014:80"
+    depends_on:
+      - discount
+  fakepayment.api:
+    container_name: fakepayment.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityServerURL=http://identityserver.api
+      - RabbitMQUrl=rabbitmq
+      
+    ports:
+      - "5016:80"
+    depends_on:
+      - rabbitmq
+  order.api:
+    container_name: order.api
+    restart: on-failure
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityServerURL=http://identityserver.api
+      - RabbitMQUrl=rabbitmq
+      - "ConnectionStrings:DefaultConnection=Server=orderdb,1433;Database=OrderDb; User=sa; Password=Password123*; TrustServerCertificate=True"
+      
+    ports:
+      - "5015:80"
+    depends_on:
+      - rabbitmq
+      - orderdb
+  gateway.api:
+    container_name: gateway.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:80
+      - IdentityServerURL=http://identityserver.api    
+    ports:
+      - "5000:80"
+  
+  identityserver.api:
+    container_name: identityserver.api
+    restart: on-failure
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:DefaultConnection=Server=identitydb,1433;Database=IdentityDb; User=sa; Password=Password123*"
+    ports:
+      - "5001:80"
+    depends_on:
+      - identitydb
+  aspnetcoremvc.web:
+    container_name: aspnetcoremvc.web
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ServiceApiSettings:IdentityBaseUrl=http://identityserver.api  
+      - ServiceApiSettings:GatewayBaseUrl= http://gateway.api 
+    ports:
+      - "5010:80"
+    depends_on:
+      - gateway.api  
+      - identityserver.api
+      - catalog.api
+      - basket.api
+      - order.api
+      - photostock.api
+      - fakepayment.api
+      - discount.api

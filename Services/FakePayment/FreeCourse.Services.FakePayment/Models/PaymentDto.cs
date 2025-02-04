@@ -7,5 +7,8 @@
         public string Expiration { get; set; }
         public string CVV { get; set; }
         public decimal TotalPrice { get; set; }
+
+        //oreadiki tüm propları buraya göndermek için yapıyoruz
+        public OrderDto Order { get; set; }
     }
 }

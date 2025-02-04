@@ -1,6 +1,8 @@
+using FreeCourse.Services.Basket.Consumer;
 using FreeCourse.Services.Basket.Services;
 using FreeCourse.Services.Basket.Settings;
 using FreeCourses.Shared.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -13,6 +15,29 @@ var builder = WebApplication.CreateBuilder(args);
 
 var requreAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();//bize id lazým identity koruma altýna almak için
 
+
+
+
+
+
+builder.Services.AddMassTransit(x =>
+{
+   
+    x.AddConsumer<BasketCourseNameChangedEventConsumer>();
+    x.UsingRabbitMq((context, cfg) =>
+    {//Default Port: 5672;
+        cfg.Host(builder.Configuration["RabbitMQUrl"], "/", host =>
+        {
+            host.Username("guest");
+            host.Password("guest");
+        });
+       
+        cfg.ReceiveEndpoint("course-name-changed-event-basket-service", e =>
+        {
+            e.ConfigureConsumer<BasketCourseNameChangedEventConsumer>(context);
+        });
+    });
+});
 
 
 //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");

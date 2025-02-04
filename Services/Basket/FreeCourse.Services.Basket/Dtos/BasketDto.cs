@@ -2,6 +2,15 @@
 {
     public class BasketDto
     {
+        public BasketDto(string userId, string discountCode, int? discountRate)
+        {
+            UserId = userId;
+            DiscountCode = discountCode;
+            DiscountRate = discountRate;
+        }
+
+       
+
         public string UserId { get; set; }
         public string DiscountCode { get; set; }
         public int? DiscountRate { get; set; }

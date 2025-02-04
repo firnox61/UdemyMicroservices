@@ -1,7 +1,9 @@
+using FreeCourse.Gateway.DelegateHandlers;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddHttpClient<TokenExchangeDelegateHandler>();
 //private readonly IConfiguration Configuration;
 //parametre belirttik ve isimlerini kücük harfle aldýk configuration için aayrlýycaz
 builder.Configuration.AddJsonFile($"configuration.{builder.Environment.EnvironmentName.ToLower()}.json");
@@ -13,7 +15,7 @@ builder.Services.AddAuthentication().AddJwtBearer("GatewayAuthenticationScheme",
     options.RequireHttpsMetadata = false;
 });
 
-builder.Services.AddOcelot();
+builder.Services.AddOcelot().AddDelegatingHandler<TokenExchangeDelegateHandler>();
 var app = builder.Build();
 
 //app.MapGet("/", () => "Hello World!");

@@ -1,5 +1,7 @@
+using FreeCourse.Services.Order.Application.Consumer;
 using FreeCourse.Services.Order.Infrastructure;
 using FreeCourses.Shared.Services;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -8,12 +10,43 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 
 var builder = WebApplication.CreateBuilder(args);
-var requreAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();//bize id lazým identity koruma altýna almak için
+
+
+
+
+
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumer<CreateOrderMessageCommandConsumer>();
+    x.AddConsumer<CourseNameChangedEventConsumer>();
+    x.UsingRabbitMq((context, cfg) =>
+    {//Default Port: 5672;
+        cfg.Host(builder.Configuration["RabbitMQUrl"], "/", host =>
+        {
+            host.Username("guest");
+            host.Password("guest");
+        });
+        cfg.ReceiveEndpoint("create-order-service", e =>
+        {
+            e.ConfigureConsumer<CreateOrderMessageCommandConsumer>(context);
+        });
+        cfg.ReceiveEndpoint("course-name-changed-event-order-service", e =>
+        {
+            e.ConfigureConsumer<CourseNameChangedEventConsumer>(context);
+        });
+    });
+});
+
+
+
+
+
+var requreAuthorizePolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();//bize id lazï¿½m identity koruma altï¿½na almak iï¿½in
 JsonWebTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
 //JsonWebTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
-    options.Authority = builder.Configuration["IdentityServerURL"];//buradan key doðrulamasý yapacak ve istediði datayý dönecek
+    options.Authority = builder.Configuration["IdentityServerURL"];//buradan key doï¿½rulamasï¿½ yapacak ve istediï¿½i datayï¿½ dï¿½necek
     options.Audience = "resource_order";
     options.RequireHttpsMetadata = false;
 });
@@ -27,7 +60,7 @@ builder.Services.AddDbContext<OrderDbContext>(opt =>
     });
 });
 builder.Services.AddMediatR(typeof(FreeCourse.Services.Order.Application.Handlers.CreateOrderCommandHandler).Assembly);
-builder.Services.AddHttpContextAccessor();//altdaki bunu kullandýðý için ekledik
+builder.Services.AddHttpContextAccessor();//altdaki bunu kullandï¿½ï¿½ï¿½ iï¿½in ekledik
 builder.Services.AddScoped<ISharedIdentityService, SharedIdentityService>();
 builder.Services.AddControllers(opt =>
 {
@@ -38,6 +71,15 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    var orderDbContext = serviceProvider.GetRequiredService<OrderDbContext>();
+    orderDbContext.Database.Migrate();
+
+}
 
 if (app.Environment.IsDevelopment())
 {
