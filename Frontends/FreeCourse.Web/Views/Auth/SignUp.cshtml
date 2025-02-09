@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Kayıt Ol";
+}
+@model FreeCourse.Web.Models.SignupInput
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-lg p-4" style="width: 400px;">
+        <h2 class="text-center mb-4">Kayıt Ol</h2>
+
+        <form asp-controller="Auth" asp-action="SignUp" method="post">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger p-2" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="UserName" class="form-label"><i class="bi bi-person"></i> Kullanıcı Adı</label>
+                <input asp-for="UserName" class="form-control" placeholder="Kullanıcı adınızı girin" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"><i class="bi bi-envelope"></i> Email</label>
+                <input asp-for="Email" class="form-control" type="email" placeholder="E-posta adresinizi girin" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="City" class="form-label"><i class="bi bi-geo-alt"></i> Şehir</label>
+                <input asp-for="City" class="form-control" placeholder="Şehir adınızı girin" />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label"><i class="bi bi-lock"></i> Şifre</label>
+                <input asp-for="Password" class="form-control" type="password" placeholder="Şifrenizi girin" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100 shadow-sm">Kayıt Ol</button>
+        </form>
+
+        <p class="text-center mt-3">
+            Zaten hesabınız var mı? <a asp-controller="Auth" asp-action="SignIn" class="text-decoration-none">Giriş Yap</a>
+        </p>
+    </div>
+</div>

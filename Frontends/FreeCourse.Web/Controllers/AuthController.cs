@@ -10,13 +10,19 @@ namespace FreeCourse.Web.Controllers
     public class AuthController : Controller
     {
         private readonly IIdentityService _identityService;
+        private readonly IUserService _userService;
 
-        public AuthController(IIdentityService identityService)
+        public AuthController(IIdentityService identityService, IUserService userService)
         {
             _identityService = identityService;
+            _userService = userService;
         }
 
         public IActionResult SignIn()
+        {
+            return View();
+        }
+        public IActionResult SignUp()
         {
             return View();
         }
@@ -39,6 +45,43 @@ namespace FreeCourse.Web.Controllers
             //home controllerdaki index sayfasına gitsin
             return RedirectToAction(nameof(Index), "Home");
         }
+        [HttpPost]
+        public async Task<IActionResult> SignUp(SignupInput signupInput)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("SignUp", signupInput); // View'i açıkça belirtiyoruz
+
+            }
+            var response=await _userService.UserSignUp(signupInput);
+
+            if (!response.IsSuccessful)
+            {
+                ModelState.Clear();
+                response.Errors.ForEach(x =>
+                {
+                    ModelState.AddModelError(String.Empty, x);
+                });
+                return View();
+            }
+            var signInInput = new SigninInput
+            {
+                Email = signupInput.Email,
+                Password = signupInput.Password,
+                IsRemember = true
+            };
+            var signInResponse= await _identityService.SignIn(signInInput);
+            if (!signInResponse.IsSuccessful)
+            {
+                signInResponse.Errors.ForEach(x =>
+                {
+                    ModelState.AddModelError(String.Empty, x);
+                });
+                return View("SignUp",signupInput);
+            }
+            return RedirectToAction(nameof(Index), "Home");
+        }
+
         public async Task<IActionResult> LogOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

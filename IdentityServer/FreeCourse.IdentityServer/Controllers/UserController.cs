@@ -1,4 +1,5 @@
-﻿using FreeCourse.IdentityServer.Dtos;
+﻿using FreeCourse.IdentityServer.Data;
+using FreeCourse.IdentityServer.Dtos;
 using FreeCourse.IdentityServer.Models;
 using FreeCourses.Shared.Dtos;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,12 +21,14 @@ namespace FreeCourse.IdentityServer.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public UserController(UserManager<ApplicationUser> userManager)
+        public UserController(UserManager<ApplicationUser> userManager, ApplicationDbContext applicationDbContext )
         {
             _userManager = userManager;
+            _context = applicationDbContext;
         }
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> SignUp(SignupDto signupDto)
         {
@@ -35,11 +39,13 @@ namespace FreeCourse.IdentityServer.Controllers
                 City = signupDto.City,
             };
             var result=await _userManager.CreateAsync(user,signupDto.Password);
+            await _context.SaveChangesAsync();
             if (!result.Succeeded)
             {
                 return BadRequest(Response<NoContent>.Fail(result.Errors.Select(x=>x.Description).ToList(),400));
             }
-            return NoContent();
+            return Ok(new { success = true , message = "Kullanıcı başarıyla oluşturuldu." });
+           // return NoContent();
         }
         [HttpGet]
         public async Task<IActionResult> GetUser()
