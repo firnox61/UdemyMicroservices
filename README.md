@@ -62,3 +62,5 @@ Bu mimari, mikroservis tabanlı bir sistemde kullanıcı isteklerini yönetmek, 
 ![Ekran görüntüsü 2025-02-10 155708](https://github.com/user-attachments/assets/74f1c719-55d7-4816-ab69-387aacbfe21d)
 ![Ekran görüntüsü 2025-02-10 155648](https://github.com/user-attachments/assets/40fb16d0-8107-4780-beee-5819c3361314)
 ![Ekran görüntüsü 2025-02-10 155630](https://github.com/user-attachments/assets/51fa0eb1-c850-4e30-9e83-b7ea1a44dbdc)
+![image](https://github.com/user-attachments/assets/634514ae-b3d9-4e11-bcae-fde4d242d655)
+
