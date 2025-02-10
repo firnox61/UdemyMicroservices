@@ -31,12 +31,6 @@ Bu proje, mikroservis tabanlı bir mimari kullanarak çeşitli hizmetlerin yöne
 - **MongoDB**: MongoDB driver üzerinden bağlantı sağlar, NoSQL veritabanı.
 - **RabbitMQ (Message Broker)**: Mesajlaşma aracı olarak mikroservisler arası iletişimi sağlar.
 
-### Diğer Bileşenler
-
-- **IdentityServer**: Kimlik doğrulama ve yetkilendirme işlemleri için kullanılır.
-- **ElasticSearch**: Arama motoru, loglama ve analiz işlemleri için kullanılır.
-- **SignalR**: Gerçek zamanlı iletişim için kullanılır.
-- **Azure**: Çeşitli bulut servisleri için kullanılır (detay verilmemiş).
 
 ### Bağlantı ve İletişim
 
