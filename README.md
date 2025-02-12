@@ -1,4 +1,4 @@
-# Proje Adı
+# Kurs Satış Uygulaması
 
 Bu proje, mikroservis tabanlı bir mimari kullanarak çeşitli hizmetlerin yönetilmesini sağlayan bir sistemdir. Kullanıcılar mobil veya web üzerinden sisteme erişebilir ve çeşitli API'ler aracılığıyla işlemlerini gerçekleştirebilir.
 
