@@ -6,6 +6,7 @@ using FreeCourses.Shared.Dtos;
 using Mass=MassTransit;
 using MongoDB.Driver;
 using FreeCourses.Shared.Messages;
+using Nest;
 
 namespace FreeCourse.Services.Catalog.Services
 {
@@ -15,8 +16,9 @@ namespace FreeCourse.Services.Catalog.Services
         private readonly IMongoCollection<Category> _categoryCollection;
         private readonly IMapper _mapper;
         private readonly Mass.IPublishEndpoint _publishEndpoint;
+        private readonly IElasticClient _elasticClient;
 
-        public CourseService(IMapper mapper, IDatabaseSettings databaseSettings, Mass.IPublishEndpoint publishEndpoint)
+        public CourseService(IMapper mapper, IDatabaseSettings databaseSettings, Mass.IPublishEndpoint publishEndpoint, IElasticClient elastic)
         {
             var client=new MongoClient(databaseSettings.ConnectionString);
             var database=client.GetDatabase(databaseSettings.DatabaseName);
@@ -24,6 +26,7 @@ namespace FreeCourse.Services.Catalog.Services
             _categoryCollection = database.GetCollection<Category>(databaseSettings.CategoryCollectionName);
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
+            _elasticClient = elastic;
         }
 
         public async Task<Response<CourseDto>> CreateAsync(CourseCreateDto courseCreateDto)
@@ -31,6 +34,7 @@ namespace FreeCourse.Services.Catalog.Services
             var newCourse = _mapper.Map<Course>(courseCreateDto);
             newCourse.CreatedTime = DateTime.UtcNow;
             await _courseCollection.InsertOneAsync(newCourse);
+            _elasticClient.IndexDocument(courseCreateDto);
             return Response<CourseDto>.Success(_mapper.Map<CourseDto>(newCourse),200);
         }
 
@@ -120,6 +124,49 @@ namespace FreeCourse.Services.Catalog.Services
 
             return Response<List<CourseDto>>.Success(_mapper.Map<List<CourseDto>>(courses), 200);
         }
-        
+
+        public async Task<Response<List<CourseDto>>> SearchCoursesAsync(string query)
+        {
+            var searchResponse = await _elasticClient.SearchAsync<CourseDto>(s => s
+            .Query(q => q.Match(m => m.Field(f => f.Name).Query(query)))
+        );
+
+            if (!searchResponse.IsValid || searchResponse.Documents.Count == 0)
+            {
+                return Response<List<CourseDto>>.Fail("No courses found", 404);
+            }
+
+            // Elasticsearch'den dönen veriyi CourseDto'ya dönüştürme işlemi
+            var courses = searchResponse.Documents.Select(c => new CourseDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                Price = c.Price,
+                UserId = c.UserId,
+                Picture = c.Picture,
+                CreatedTime = c.CreatedTime,
+                CategoryId = c.CategoryId,
+                // Eğer Feature ve Category gibi ilişkili veriler varsa, bunları da dönüştürmeniz gerekebilir
+                Feature = c.Feature != null ? new FeatureDto
+                {
+                    // FeatureDto içindeki alanları doldur
+                    // Örneğin:
+                    // Id = c.Feature.Id,
+                    // Description = c.Feature.Description,
+                } : null,
+
+                Category = c.Category != null ? new CategoryDto
+                {
+                    // CategoryDto içindeki alanları doldur
+                    // Örneğin:
+                    // Id = c.Category.Id,
+                    // Name = c.Category.Name,
+                } : null
+
+            }).ToList();
+
+            return Response<List<CourseDto>>.Success(courses, 200);
+        }
     }
 }

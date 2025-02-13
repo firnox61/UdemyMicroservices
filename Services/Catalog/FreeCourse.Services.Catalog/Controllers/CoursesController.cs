@@ -1,6 +1,7 @@
 ﻿using FreeCourse.Services.Catalog.Dtos;
 using FreeCourse.Services.Catalog.Services;
 using FreeCourses.Shared.ControllerBases;
+using FreeCourses.Shared.Dtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,12 @@ namespace FreeCourse.Services.Catalog.Controllers
         public CoursesController(ICourseService courseService)
         {
             _courseService = courseService;
+        }
+        [HttpGet("search")]
+        public async Task<IActionResult> SearchCourses([FromQuery] string query)
+        {
+            var response=await _courseService.SearchCoursesAsync(query);
+            return CreateActionResultInstance(response);
         }
         [HttpGet]
         public async Task<IActionResult> GetAll() 

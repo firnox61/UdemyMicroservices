@@ -12,7 +12,8 @@ namespace FreeCourse.Services.Catalog.Services
         Task<Response<NoContent>> UpdateAsync(CourseUpdateDto courseUpdateDto);
         Task<Response<NoContent>> DeleteAsync(string id);
         Task<Response<List<CourseDto>>> GetAllByUserIdAsync(string userId);
-        
+        // Yeni SearchCourses metodu ekliyoruz
+        Task<Response<List<CourseDto>>> SearchCoursesAsync(string query);
 
     }
 }

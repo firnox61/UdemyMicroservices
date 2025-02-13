@@ -63,8 +63,8 @@ namespace FreeCourse.IdentityServer
                     ClientId="WebMvcClientForUser",
                     AllowOfflineAccess=true,
                     ClientSecrets={new Secret("secret".Sha256()) },
-                    AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
-                    AllowedScopes={ "basket_fullpermission","order_fullpermission","gateway_fullpermission",
+                    AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,//catalog_fullpermission test için ekledimsonra çıkar
+                    AllowedScopes={ "basket_fullpermission","order_fullpermission","gateway_fullpermission","catalog_fullpermission",
                     IdentityServerConstants.StandardScopes.Email,
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,

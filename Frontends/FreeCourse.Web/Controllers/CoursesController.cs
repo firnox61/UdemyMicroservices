@@ -44,6 +44,17 @@ namespace FreeCourse.Web.Controllers
             await _catalogService.CreateCourseAsync(courseCreateInput);
             return RedirectToAction(nameof(Index));
         }
+        [HttpGet]
+        public async Task<IActionResult> Search(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            var searchResults = await _catalogService.SearchCoursesAsync(query);
+            return View("Index", searchResults);
+        }
         public async Task<IActionResult> Update(string id)
         {
             var course=await _catalogService.GetByCourseId(id);

@@ -5,6 +5,8 @@ using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
+using MongoDB.Driver.Core.Configuration;
+using Nest;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -47,6 +49,13 @@ builder.Services.AddSingleton<IDatabaseSettings>(sp =>
 {
     return sp.GetRequiredService<IOptions<DatabaseSettings>>().Value;
 });
+// Elasticsearch ayarlarýný yapýlandýr ve DI container'a ekle
+var settings = new Nest.ConnectionSettings(new Uri("http://localhost:9200"))
+    .DefaultIndex("courses");
+var client = new ElasticClient(settings);
+
+builder.Services.AddSingleton<IElasticClient>(client); // DI ile yönet
+
 var app = builder.Build();
 
 

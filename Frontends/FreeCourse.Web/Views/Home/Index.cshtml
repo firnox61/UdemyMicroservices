@@ -10,6 +10,14 @@
         object-fit: cover;
     }
 </style>
+<!-- Arama Formu -->
+<form asp-controller="Courses" asp-action="Search" method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="query" class="form-control" placeholder="Kurs ara..." required>
+        <button type="submit" class="btn btn-primary">Ara</button>
+    </div>
+</form>
+
 @if (Model != null && Model.Any())
 {
     @foreach (var item in Model)
