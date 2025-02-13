@@ -1,4 +1,4 @@
-# Proje Adı
+# Kurs Satış Uygulaması
 
 Bu proje, mikroservis tabanlı bir mimari kullanarak çeşitli hizmetlerin yönetilmesini sağlayan bir sistemdir. Kullanıcılar mobil veya web üzerinden sisteme erişebilir ve çeşitli API'ler aracılığıyla işlemlerini gerçekleştirebilir.
 
@@ -31,12 +31,6 @@ Bu proje, mikroservis tabanlı bir mimari kullanarak çeşitli hizmetlerin yöne
 - **MongoDB**: MongoDB driver üzerinden bağlantı sağlar, NoSQL veritabanı.
 - **RabbitMQ (Message Broker)**: Mesajlaşma aracı olarak mikroservisler arası iletişimi sağlar.
 
-### Diğer Bileşenler
-
-- **IdentityServer**: Kimlik doğrulama ve yetkilendirme işlemleri için kullanılır.
-- **ElasticSearch**: Arama motoru, loglama ve analiz işlemleri için kullanılır.
-- **SignalR**: Gerçek zamanlı iletişim için kullanılır.
-- **Azure**: Çeşitli bulut servisleri için kullanılır (detay verilmemiş).
 
 ### Bağlantı ve İletişim
 
@@ -56,3 +50,11 @@ Bu proje, mikroservis tabanlı bir mimari kullanarak çeşitli hizmetlerin yöne
 - **RabbitMQ**: Mikroservisler arasında mesajlaşma ve iş süreçlerinin yönetimi için kullanılır.
 
 Bu mimari, mikroservis tabanlı bir sistemde kullanıcı isteklerini yönetmek, veri depolamak ve iş süreçlerini etkin bir şekilde yönetmek için tasarlanmıştır.
+![Ekran görüntüsü 2025-02-10 143916](https://github.com/user-attachments/assets/cff74ba6-7d73-4566-9a7f-80ba571ea1fc)
+![Ekran görüntüsü 2025-02-10 150522](https://github.com/user-attachments/assets/ae43d287-c5d1-4d6e-a03c-d38844d049b7)
+![Ekran görüntüsü 2025-02-10 155125](https://github.com/user-attachments/assets/19810560-acfc-4a9e-8ef7-05d4326488aa)
+![Ekran görüntüsü 2025-02-10 155708](https://github.com/user-attachments/assets/74f1c719-55d7-4816-ab69-387aacbfe21d)
+![Ekran görüntüsü 2025-02-10 155648](https://github.com/user-attachments/assets/40fb16d0-8107-4780-beee-5819c3361314)
+![Ekran görüntüsü 2025-02-10 155630](https://github.com/user-attachments/assets/51fa0eb1-c850-4e30-9e83-b7ea1a44dbdc)
+![image](https://github.com/user-attachments/assets/634514ae-b3d9-4e11-bcae-fde4d242d655)
+
