@@ -17,8 +17,10 @@ namespace FreeCourse.Services.Catalog.Services
         private readonly IMapper _mapper;
         private readonly Mass.IPublishEndpoint _publishEndpoint;
         private readonly IElasticClient _elasticClient;
+        private readonly ICategoryService _categoryService;
 
-        public CourseService(IMapper mapper, IDatabaseSettings databaseSettings, Mass.IPublishEndpoint publishEndpoint, IElasticClient elastic)
+        public CourseService(IMapper mapper, IDatabaseSettings databaseSettings, Mass.IPublishEndpoint publishEndpoint,
+            IElasticClient elastic, ICategoryService categoryService)
         {
             var client=new MongoClient(databaseSettings.ConnectionString);
             var database=client.GetDatabase(databaseSettings.DatabaseName);
@@ -27,6 +29,7 @@ namespace FreeCourse.Services.Catalog.Services
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
             _elasticClient = elastic;
+            _categoryService = categoryService;
         }
 
         public async Task<Response<CourseDto>> CreateAsync(CourseCreateDto courseCreateDto)
@@ -68,6 +71,11 @@ namespace FreeCourse.Services.Catalog.Services
             var result=await _courseCollection.DeleteOneAsync(x=>x.Id==id);
             if(result.DeletedCount>0)
             {
+                var elasticResponse = await _elasticClient.DeleteAsync<CourseDto>(id);
+                if (!elasticResponse.IsValid)
+                {
+                    return Response<NoContent>.Fail("Failed to delete from Elasticsearch", 500);
+                }
                 return Response<NoContent>.Success(204);
             }
             else
@@ -137,36 +145,38 @@ namespace FreeCourse.Services.Catalog.Services
             }
 
             // Elasticsearch'den dönen veriyi CourseDto'ya dönüştürme işlemi
-            var courses = searchResponse.Documents.Select(c => new CourseDto
+            var categoryList = await _categoryService.GetAllAsync();
+
+            var courses = searchResponse.Documents.Select(c =>
             {
-                Id = c.Id,
-                Name = c.Name,
-                Description = c.Description,
-                Price = c.Price,
-                UserId = c.UserId,
-                Picture = c.Picture,
-                CreatedTime = c.CreatedTime,
-                CategoryId = c.CategoryId,
-                // Eğer Feature ve Category gibi ilişkili veriler varsa, bunları da dönüştürmeniz gerekebilir
-                Feature = c.Feature != null ? new FeatureDto
-                {
-                    // FeatureDto içindeki alanları doldur
-                    // Örneğin:
-                    // Id = c.Feature.Id,
-                    // Description = c.Feature.Description,
-                } : null,
+                var matchedCategory = categoryList.Data.FirstOrDefault(cat => cat.Id == c.CategoryId);
 
-                Category = c.Category != null ? new CategoryDto
+                return new CourseDto
                 {
-                    // CategoryDto içindeki alanları doldur
-                    // Örneğin:
-                    // Id = c.Category.Id,
-                    // Name = c.Category.Name,
-                } : null
+                    Id = c.Id,
+                    Name = c.Name,
+                    Description = c.Description,
+                    Price = c.Price,
+                    UserId = c.UserId,
+                    Picture = c.Picture,
+                    CreatedTime = c.CreatedTime,
+                    CategoryId = c.CategoryId,
 
+                    Feature = c.Feature != null ? new FeatureDto
+                    {
+                        Duration = c.Feature.Duration
+                    } : null,
+
+                    Category = matchedCategory != null ? new CategoryDto
+                    {
+                        Id = matchedCategory.Id,
+                        Name = matchedCategory.Name
+                    } : null
+                };
             }).ToList();
 
             return Response<List<CourseDto>>.Success(courses, 200);
+
         }
     }
 }

@@ -38,7 +38,7 @@
                                 <td>@item.Name</td>
                                 <td>@item.Price</td>
                                 <td>@item.Feature.Duration</td>
-                                <td>@(item.Category != null ? item.Category.Name : "Bilinmeyen Kategori")</td>
+                                <td>@(item.Category.Name != null ? item.Category.Name : "Bilinmeyen Kategori")</td>
                                 <td>
                                     @* URL'ye dinamik bir parametre ekler, burada item.Id kullanılmış.
                                         asp-route-id: URL'ye bir parametre eklemek için kullanılır.
