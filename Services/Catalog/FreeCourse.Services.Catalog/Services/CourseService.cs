@@ -7,6 +7,7 @@ using Mass=MassTransit;
 using MongoDB.Driver;
 using FreeCourses.Shared.Messages;
 using Nest;
+using Elasticsearch.Net;
 
 namespace FreeCourse.Services.Catalog.Services
 {
@@ -50,6 +51,19 @@ namespace FreeCourse.Services.Catalog.Services
                 return Response<NoContent>.Fail("Course not found", 404);
             }
 
+           /* var updatedCourse = _mapper.Map<CourseDto>(courseUpdateDto);
+
+            var elasticResponse = await _elasticClient.UpdateAsync<CourseDto>(courseUpdateDto.Id, u => u
+                .Doc(updatedCourse) // Güncellenmiş nesneyi Elasticsearch'e gönderiyoruz
+                .Refresh(Refresh.True)
+            );
+
+
+            if (!elasticResponse.IsValid)
+            {
+                return Response<NoContent>.Fail($"Elasticsearch update failed: {elasticResponse.DebugInformation}", 500);
+            }*/
+
             await _publishEndpoint.Publish<BasketCourseChangeNameEvent>(new BasketCourseChangeNameEvent
             {
                 UserId = courseUpdateDto.UserId,
@@ -62,7 +76,7 @@ namespace FreeCourse.Services.Catalog.Services
                 CourseId = updateCourse.Id,
                 UpdateName = courseUpdateDto.Name,
             });
-
+            _elasticClient.IndexDocument(courseUpdateDto);
             return Response<NoContent>.Success(204);
 
         }
@@ -136,8 +150,9 @@ namespace FreeCourse.Services.Catalog.Services
         public async Task<Response<List<CourseDto>>> SearchCoursesAsync(string query)
         {
             var searchResponse = await _elasticClient.SearchAsync<CourseDto>(s => s
-            .Query(q => q.Match(m => m.Field(f => f.Name).Query(query)))
-        );
+    .Query(q => q.MatchPhrasePrefix(m => m.Field(f => f.Name).Query(query)))
+);
+
 
             if (!searchResponse.IsValid || searchResponse.Documents.Count == 0)
             {
@@ -177,6 +192,28 @@ namespace FreeCourse.Services.Catalog.Services
 
             return Response<List<CourseDto>>.Success(courses, 200);
 
+        }
+        public async Task SyncCoursesToElasticsearchAsync()
+        {
+            var courses = await _courseCollection.Find(_ => true).ToListAsync();
+
+            if (!courses.Any())
+            {
+                Console.WriteLine("No courses found in the database.");
+                return;
+            }
+
+            var courseDtos = _mapper.Map<List<CourseDto>>(courses);
+            var bulkResponse = await _elasticClient.IndexManyAsync(courseDtos);
+
+            if (!bulkResponse.IsValid)
+            {
+                Console.WriteLine($"Failed to sync courses: {bulkResponse.DebugInformation}");
+            }
+            else
+            {
+                Console.WriteLine("Courses successfully synced to Elasticsearch.");
+            }
         }
     }
 }

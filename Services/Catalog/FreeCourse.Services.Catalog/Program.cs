@@ -53,6 +53,7 @@ builder.Services.AddSingleton<IDatabaseSettings>(sp =>
 var settings = new Nest.ConnectionSettings(new Uri("http://localhost:9200"))
     .DefaultIndex("courses");
 var client = new ElasticClient(settings);
+builder.Services.AddHostedService<ElasticsearchSyncHostedService>();
 
 builder.Services.AddSingleton<IElasticClient>(client); // DI ile yönet
 
