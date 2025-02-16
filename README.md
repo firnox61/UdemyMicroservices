@@ -48,6 +48,8 @@ Bu proje, mikroservis tabanlı bir mimari kullanarak çeşitli hizmetlerin yöne
 - **API Gateway -> Mikroservisler**: İstekler ilgili mikroservislere yönlendirilir.
 - **Mikroservisler -> Veri Depoları**: Mikroservisler, ilgili veri depoları ve cache mekanizmaları ile iletişim kurar.
 - **RabbitMQ**: Mikroservisler arasında mesajlaşma ve iş süreçlerinin yönetimi için kullanılır.
+- **ElasticSearch**: Arama işlemleri için kullanıldı
+- **Kibana**: Elde edilen verilerin görsel olarak işlenebilmesini sağlamakta
 
 Bu mimari, mikroservis tabanlı bir sistemde kullanıcı isteklerini yönetmek, veri depolamak ve iş süreçlerini etkin bir şekilde yönetmek için tasarlanmıştır.
 ![Ekran görüntüsü 2025-02-10 143916](https://github.com/user-attachments/assets/cff74ba6-7d73-4566-9a7f-80ba571ea1fc)
