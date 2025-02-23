@@ -14,7 +14,8 @@ namespace FreeCourse.Services.Catalog.Services
         Task<Response<List<CourseDto>>> GetAllByUserIdAsync(string userId);
         // Yeni SearchCourses metodu ekliyoruz
         Task<Response<List<CourseDto>>> SearchCoursesAsync(string query);
-        Task SyncCoursesToElasticsearchAsync();
+        Task<Response<NoContent>> SyncCoursesToElasticsearchAsync();
+
 
     }
 }

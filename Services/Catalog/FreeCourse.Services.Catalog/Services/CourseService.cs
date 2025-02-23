@@ -193,14 +193,13 @@ namespace FreeCourse.Services.Catalog.Services
             return Response<List<CourseDto>>.Success(courses, 200);
 
         }
-        public async Task SyncCoursesToElasticsearchAsync()
+        public async Task<Response<NoContent>> SyncCoursesToElasticsearchAsync()
         {
             var courses = await _courseCollection.Find(_ => true).ToListAsync();
 
             if (!courses.Any())
             {
-                Console.WriteLine("No courses found in the database.");
-                return;
+                return Response<NoContent>.Fail("No courses found in the database.", 404);               
             }
 
             var courseDtos = _mapper.Map<List<CourseDto>>(courses);
@@ -208,11 +207,12 @@ namespace FreeCourse.Services.Catalog.Services
 
             if (!bulkResponse.IsValid)
             {
-                Console.WriteLine($"Failed to sync courses: {bulkResponse.DebugInformation}");
+                return Response<NoContent>.Fail($"Failed to sync courses: {bulkResponse.DebugInformation}", 500);
+               
             }
             else
             {
-                Console.WriteLine("Courses successfully synced to Elasticsearch.");
+                return Response<NoContent>.Success(204);
             }
         }
     }

@@ -4,21 +4,24 @@ using FreeCourse.Services.Catalog.Models;
 using FreeCourse.Services.Catalog.Settings;
 using FreeCourses.Shared.Dtos;
 using MongoDB.Driver;
+using Nest;
 
 namespace FreeCourse.Services.Catalog.Services
 {
-    public class CategoryService:ICategoryService
+    public class CategoryService : ICategoryService
     {
         private readonly IMongoCollection<Category> _categoryCollection;
         private readonly IMapper _mapper;
+        private readonly IElasticClient _elasticClient;
 
-        public CategoryService(IMapper mapper, IDatabaseSettings databaseSettings)
+        public CategoryService(IMapper mapper, IDatabaseSettings databaseSettings, IElasticClient elastic)
         {
             var client=new MongoClient(databaseSettings.ConnectionString);//clienta bağlandık
             var database=client.GetDatabase(databaseSettings.DatabaseName);//database adını aldık
 
             _categoryCollection = database.GetCollection<Category>(databaseSettings.CategoryCollectionName);
             _mapper = mapper;
+            _elasticClient = elastic;
         }
 
         public async Task<Response<List<CategoryDto>>> GetAllAsync()
@@ -46,6 +49,22 @@ namespace FreeCourse.Services.Catalog.Services
                 return Response<CategoryDto>.Fail("Category not found", 404);
             }
             return Response<CategoryDto>.Success(_mapper.Map<CategoryDto>(category), 200);
+        }
+
+        public async Task<Response<NoContent>> SyncCategoriesToElasticsearchAsync()
+        {
+            var categories = await _categoryCollection.Find(_ => true).ToListAsync();
+            if (!categories.Any())
+            {
+                return Response<NoContent>.Fail("No categories found in the database.", 404);
+            }
+            var categoryDtos = _mapper.Map<List<CategoryDto>>(categories);
+            var bulkResponse = await _elasticClient.IndexManyAsync(categoryDtos, "categories");
+            if (!bulkResponse.IsValid)
+            {
+                return Response<NoContent>.Fail($"Failed to sync categories: {bulkResponse.DebugInformation}", 500);
+            }
+            return Response<NoContent>.Success(204);
         }
     }
 }

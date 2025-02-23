@@ -36,6 +36,18 @@ namespace FreeCourse.Services.Catalog.Controllers
             var categories = await _categoryService.CreateAsync(categoryDto);
             return CreateActionResultInstance(categories);
         }
+        [HttpPost("sync-elasticsearch")]
+        public async Task<IActionResult> SyncElasticsearch()
+        {
+            var response = await _categoryService.SyncCategoriesToElasticsearchAsync();
+
+            if (!response.IsSuccessful)
+            {
+                return StatusCode(response.StatusCode, response.Errors);
+            }
+
+            return NoContent();
+        }
 
     }
 }

@@ -14,7 +14,18 @@
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var courseService = scope.ServiceProvider.GetRequiredService<ICourseService>();
-                await courseService.SyncCoursesToElasticsearchAsync();
+                var categoryService = scope.ServiceProvider.GetRequiredService<ICategoryService>();
+
+                try
+                {
+                    await categoryService.SyncCategoriesToElasticsearchAsync();
+                    await courseService.SyncCoursesToElasticsearchAsync();
+                    Console.WriteLine("✅ Elasticsearch senkronizasyonu tamamlandı.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"❌ Elasticsearch senkronizasyon hatası: {ex.Message}");
+                }
             }
         }
 
